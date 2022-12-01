@@ -1,12 +1,11 @@
-import Data.List (sort)
-
 replaceMin :: Ord a => [a] -> a -> [a]
 replaceMin [] y = [y]
 replaceMin [x] y = [max x y]
 replaceMin (x : xs) y =
-  if y < x
-    then x : replaceMin xs y
-    else max x y : xs
+  if y > x
+    then max x y : replaceMin xs x
+    else x : replaceMin xs y
+
 
 findMax :: Foldable t => t [Char] -> (Int, Int)
 findMax = foldl
@@ -22,7 +21,7 @@ findMax3 = foldl
     ( \(totalMax, currentMax) x ->
         if x /= ""
           then (totalMax, currentMax + (read x :: Int))
-          else (replaceMin (sort totalMax) currentMax, 0)
+          else (replaceMin totalMax currentMax, 0)
     )
     ([0, 0, 0], 0)
 
