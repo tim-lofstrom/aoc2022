@@ -1,39 +1,34 @@
-{-# HLINT ignore "Eta reduce" #-}
-{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 import Data.List (sort)
 
-mylist = ["1", "6", "", "3"]
-
-findMax list =
-  foldl
-    ( \(totalMax, currentMax) x ->
-        if x /= ""
-          then (totalMax, currentMax + (read x :: Int))
-          else (max totalMax currentMax, 0)
-    )
-    (0, 0)
-    list
-
+replaceMin :: Ord a => [a] -> a -> [a]
+replaceMin [] y = [y]
 replaceMin [x] y = [max x y]
 replaceMin (x : xs) y =
   if y < x
     then x : replaceMin xs y
     else max x y : xs
 
-findMax3 list =
-  foldl
+findMax :: Foldable t => t [Char] -> (Int, Int)
+findMax = foldl
+    ( \(totalMax, currentMax) x ->
+        if x /= ""
+          then (totalMax, currentMax + (read x :: Int))
+          else (max totalMax currentMax, 0)
+    )
+    (0, 0)
+
+findMax3 :: Foldable t => t [Char] -> ([Int], Int)
+findMax3 = foldl
     ( \(totalMax, currentMax) x ->
         if x /= ""
           then (totalMax, currentMax + (read x :: Int))
           else (replaceMin (sort totalMax) currentMax, 0)
     )
     ([0, 0, 0], 0)
-    list
 
 main :: IO ()
 main = do
   fileData <- readFile "input.txt"
   let strs = lines fileData
+  print (fst (findMax strs))
   print (sum (fst(findMax3 strs)))
-  pure ()
