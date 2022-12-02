@@ -34,11 +34,7 @@ winningMove "C" = "A"
 stringToSum (x:y:_) = winPoints y + invertPoints y x
 
 calc :: Foldable t => t [Char] -> Int
-calc = foldl
-    ( \total x ->
-        total + stringToSum (words x)
-    )
-    0
+calc = foldl ( \total x -> total + stringToSum (words x) ) 0
 
 main :: IO ()
 main = do
