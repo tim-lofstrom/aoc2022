@@ -1,6 +1,5 @@
 
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
-
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 import Data.List (intersect, union)
 
@@ -12,38 +11,19 @@ split delimiter str =
      in start : split delimiter remain
 
 
-first (a:b) = a
-second (a:b:_) = b
-
 lineRanges line =
-    let ranges = split ',' line
-        r1 = first ranges
-        r2 = second ranges
-        rangeOneTemp = split '-' r1
-        rangeTwoTemp = split '-' r2
-        r1p1 = first rangeOneTemp
-        r1p2 = second rangeOneTemp
-        r2p1 = first rangeTwoTemp
-        r2p2 = second rangeTwoTemp
+    let r1p1 = head (split '-' (head (split ',' line)))
+        r1p2 = last (split '-' (head (split ',' line)))
+        r2p1 = head (split '-' (last (split ',' line)))
+        r2p2 = last (split '-' (last (split ',' line)))
         rangeOne = [(read r1p1::Int)..(read r1p2::Int)]
         rangeTwo = [(read r2p1::Int)..(read r2p2::Int)]
-        rangeOneLength = length rangeOne
-        rangeTwoLength = length rangeTwo
-        maxLen = max rangeOneLength rangeTwoLength
-        theUnion = intersect rangeOne rangeTwo
     in
-        not (null theUnion)
+        not (null (rangeOne `intersect` rangeTwo))
 
 
 calc :: Foldable t => t [Char] -> Int
-calc = foldl
-    ( \total x ->
-        if lineRanges x then
-            total + 1
-        else
-            total
-    )
-    0
+calc = foldl ( \total x -> if lineRanges x then total + 1 else total ) 0
 
 main :: IO ()
 main = do
