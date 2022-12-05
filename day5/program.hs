@@ -36,10 +36,6 @@ replace s find repl =
     then repl ++ replace (drop (length find) s) find repl
     else head s : replace (tail s) find repl
 
-move :: [a] -> [a] -> Int -> ([a], [a])
-move arr1 arr2 numbers =
-  (drop numbers arr1, reverse (take numbers arr1) ++ arr2)
-
 replaceToCommas =
   map
     ( (\x -> replace x "move" "")
