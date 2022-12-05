@@ -1,9 +1,10 @@
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
-import Data.List (intersect, union)
-import Data.Maybe (fromMaybe)
-import qualified Data.Map as Map
 import qualified Data.ByteString as Map
+import Data.Function
+import Data.List (intersect, union)
+import qualified Data.Map as Map
+import Data.Maybe (fromMaybe)
 
 theMap :: Map.Map Int [[Char]]
 theMap = Map.fromList (zip [1 .. 9] stackList)
@@ -47,25 +48,26 @@ replaceToCommas =
         . (\x -> replace x " " "")
     )
 
-calc = foldl
+calc =
+  foldl
     ( \aMap x ->
         let parts = split ',' x
-            numbers = read (head parts)::Int
-            from = read (parts!!1)::Int
-            to = read (parts!!2)::Int
+            numbers = read (head parts) :: Int
+            from = read (parts !! 1) :: Int
+            to = read (parts !! 2) :: Int
             fromList = fromMaybe [] (Map.lookup from aMap)
             toList = fromMaybe [] (Map.lookup to aMap)
-            moved = move fromList toList numbers
-            temp = Map.insert from (fst moved) aMap
-        in
-            Map.insert to (snd moved) temp
+         in aMap
+              & Map.insert from (drop numbers fromList)
+              & Map.insert to (reverse (take numbers fromList) ++ toList)
     )
 
-toResult aMap = foldl
+toResult aMap =
+  foldl
     ( \reslList x ->
         reslList ++ head (fromMaybe [] (Map.lookup x aMap))
-    ) []
-
+    )
+    []
 
 main :: IO ()
 main = do
@@ -73,5 +75,5 @@ main = do
   let strs = lines fileData
   let commaList = replaceToCommas strs
   let sum = calc theMap commaList
-  let result = toResult sum [1..9]
+  let result = toResult sum [1 .. 9]
   print result
