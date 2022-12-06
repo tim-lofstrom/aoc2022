@@ -6,7 +6,6 @@ calc numbers window rest =
     then numbers
     else calc numbers (take numbers rest) (drop 1 rest) + 1
 
-main :: IO ()
 main = do
   line <- readFile "input.txt"
   print (calc 4 [] line)
