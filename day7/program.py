@@ -1,5 +1,5 @@
 lines = []
-with open("/home/timlof/workspace/haskell/aoc/day7/input.txt") as file:
+with open("input.txt") as file:
     for line in file:
         lines.append(line.rstrip())
 
@@ -16,12 +16,13 @@ for line in lines:
                 cwd.pop()
             else:
                 cwd.append(parts[2])
+                
     elif parts[0].isnumeric():
+
         key = "/"+"/".join(cwd[1:])
 
         if not key in tree:
             tree[key] = 0
-
         tree[key] += int(parts[0])
 
         temp = cwd.copy()
