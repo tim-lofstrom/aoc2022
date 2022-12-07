@@ -16,11 +16,9 @@ for line in lines:
                 cwd.pop()
             else:
                 cwd.append(parts[2])
-            print(cwd)
     elif parts[0].isnumeric():
         key = "/"+"/".join(cwd[1:])
 
-        # print(key + ":" + parts[0])
         if not key in tree:
             tree[key] = 0
 
@@ -28,7 +26,7 @@ for line in lines:
 
         temp = cwd.copy()
 
-        while len(temp) > 0:
+        while len(temp) > 1:
             temp.pop()
             key = "/"+"/".join(temp[1:])
             if not key in tree:
@@ -38,9 +36,19 @@ for line in lines:
 
 sum = 0
 
+listan = []
+
 for k in tree:
-    print(k + ":" + str(tree[k]))
     if(tree[k] <= 100000):
         sum += tree[k]
+    listan.append(tree[k])
 
 print(sum)
+
+listan.sort()
+
+spaceNeeded = 30000000-(70000000-listan[-1])
+for i in listan:
+    if i > spaceNeeded:
+        print(i)
+        break
